@@ -38,6 +38,7 @@ Return a list of installed packages or nil for every skipped package."
  'magit-gh-pulls
  'magit-svn
  'markdown-mode
+ 'org
  'python
  'yasnippet
  )
@@ -48,10 +49,12 @@ Return a list of installed packages or nil for every skipped package."
 (setq backup-inhibited t)
 (ido-mode t)
 
+(setq custom-file (concat user-emacs-directory "customize.el"))
+(load custom-file)
+
 (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 (add-to-list 'exec-path "/usr/local/bin")
 
 (color-theme-initialize)
 
-(setq custom-file (concat user-emacs-directory "customize.el"))
-(load custom-file)
+(global-set-key (kbd "<f12>") 'magit-status)
