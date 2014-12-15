@@ -49,6 +49,7 @@ Return a list of installed packages or nil for every skipped package."
 (package-initialize)
 
 (tool-bar-mode -1)
+(scroll-bar-mode -1)
 (setq backup-inhibited t)
 
 (setq custom-file (concat user-emacs-directory "customize.el"))
@@ -58,6 +59,7 @@ Return a list of installed packages or nil for every skipped package."
 (add-to-list 'exec-path "/usr/local/bin")
 
 (color-theme-initialize)
+(color-theme-dark)
 
 (eval-after-load "linum"
   '(require 'linum-relative))
