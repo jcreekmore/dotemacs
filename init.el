@@ -26,7 +26,9 @@ Return a list of installed packages or nil for every skipped package."
  'ack-and-a-half
  'auctex
  'color-theme
+ 'elpy
  'expand-region
+ 'flymake-jslint
  'gist
  'haskell-mode
  'helm
@@ -40,9 +42,8 @@ Return a list of installed packages or nil for every skipped package."
  'magit-svn
  'markdown-mode
  'org
- 'org-jira
- 'org-trello
  'python
+ 'projectile
  'yasnippet
  )
 
@@ -63,9 +64,6 @@ Return a list of installed packages or nil for every skipped package."
 
 (eval-after-load "linum"
   '(require 'linum-relative))
-
-(eval-after-load "org"
-  '(require 'org-trello))
 
 (global-set-key (kbd "<f12>") 'magit-status)
 
@@ -90,6 +88,38 @@ Return a list of installed packages or nil for every skipped package."
                   (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
                   (modes quote (haskell-mode literate-haskell-mode)))))
 
+
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(require 'elpy)
+(elpy-enable)
+
+
+(require 'projectile)
+(projectile-global-mode)
+
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+(require 'flymake-jslint)
+(add-hook 'js2-mode-hook 'flymake-jslint-load)
+(add-hook 'js2-mode-hook 'linum-mode)
+
+(require 'eshell)
+(global-set-key (kbd "C-z") 'eshell)
+(add-hook 'eshell-mode-hook
+	  (lambda ()
+            (add-hook 'eshell-preoutput-filter-functions 'ansi-color-filter-apply)
+	    (local-set-key (kbd "C-z") 'bury-buffer)
+	    (local-set-key (kbd "C-a") 'eshell-bol)
+	    (local-set-key (kbd "<up>") 'previous-line)
+	    (local-set-key (kbd "<down>") 'next-line)))
+(defalias 'eshell/emacs 'find-file)
+(defalias 'eshell/man 'woman)
+(defun eshell/dired () (dired (eshell/pwd)))
 
 (require 'helm-config)
 

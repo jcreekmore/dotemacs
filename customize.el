@@ -7,7 +7,15 @@
  '(haskell-mode-hook (quote (turn-on-haskell-doc turn-on-haskell-indent)))
  '(haskell-program-name "ghci")
  '(ledger-use-iso-dates t)
- '(org-agenda-files (quote ("~/Dropbox/Notes/trello.org"))))
+ '(c-default-style
+   (quote
+    ((c-mode . "linux")
+     (java-mode . "java")
+     (awk-mode . "awk")
+     (other . "gnu"))))
+ '(elpy-test-runner (quote elpy-test-nose-runner))
+
+ '(flymake-jslint-args (quote ("--unparam"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
