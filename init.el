@@ -20,18 +20,21 @@ Return a list of installed packages or nil for every skipped package."
 (or (file-exists-p package-user-dir)
     (package-refresh-contents))
 
+(package-initialize)
+
 (ensure-package-installed
  'ace-jump-mode
  'ace-window
- 'ack-and-a-half
  'auctex
  'color-theme
  'elpy
  'expand-region
+ 'flymake-cursor
  'flymake-jslint
  'gist
  'haskell-mode
  'helm
+ 'helm-projectile
  'js2-mode
  'ledger-mode
  'linum-relative
@@ -47,8 +50,6 @@ Return a list of installed packages or nil for every skipped package."
  'yasnippet
  )
 
-(package-initialize)
-
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (setq backup-inhibited t)
@@ -60,7 +61,7 @@ Return a list of installed packages or nil for every skipped package."
 (add-to-list 'exec-path "/usr/local/bin")
 
 (color-theme-initialize)
-(color-theme-dark)
+(color-theme-tty-dark)
 
 (eval-after-load "linum"
   '(require 'linum-relative))
@@ -151,3 +152,22 @@ Return a list of installed packages or nil for every skipped package."
 (global-set-key (kbd "C-x C-b") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-c h o") 'helm-occur)
+
+(require 'helm-projectile)
+(helm-projectile-on)
+
+(desktop-save-mode)
+(server-start)
+(put 'downcase-region 'disabled nil)
+
+(require 'uniquify)
+
+(require 'ace-jump-mode)
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
+(require 'ace-window)
+(global-set-key (kbd "<f8>") 'ace-window)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+
+(eval-after-load "flymake"
+  '(require 'flymake-cursor))
