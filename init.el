@@ -9,7 +9,9 @@
 
 (let* ((package--builtins nil)
        (packages
-        '(magit                ; control Git from Emacs
+        '(ebib                 ; Manage bibtex databases
+          ledger-mode          ; Emacs Major mode for Ledger
+          magit                ; control Git from Emacs
           markdown-mode        ; Emacs Major mode for Markdown-formatted files
           org                  ; Outline-based notes management and organizer
           rust-mode            ; Emacs Major mode for Rust
@@ -24,7 +26,9 @@
       (when packages
         ;; Install uninstalled packages
         (package-refresh-contents)
-        (mapc 'package-install packages)))))
+        (mapc 'package-install packages))))) 
+
+(exec-path-from-shell-initialize)
 
 ;; Get my visuals all pretty
 (load-theme 'deeper-blue t)
@@ -58,3 +62,7 @@
 ;; Some mac-bindings interfere with Emacs bindings.
 (when (boundp 'mac-pass-command-to-system)
   (setq mac-pass-command-to-system nil))
+
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
