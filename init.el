@@ -14,9 +14,11 @@
           magit                ; control Git from Emacs
           markdown-mode        ; Emacs Major mode for Markdown-formatted files
           org                  ; Outline-based notes management and organizer
+          ox-jira              ; Org Export support for JIRA
           rust-mode            ; Emacs Major mode for Rust
           pdf-tools            ; Emacs support library for PDF files
           projectile           ; Manage and navigate projects in Emacs easily
+          yaml-mode
           which-key)))         ; Display available keybindings in popup
   (ignore-errors ;; This package is only relevant for Mac OS X.
     (when (memq window-system '(mac ns))
@@ -66,3 +68,24 @@
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
+
+
+(setq org-agenda-files '("~/docs"))
+
+(define-key global-map "\C-cc"
+  (lambda () (interactive) (org-capture)))
+
+(define-key global-map "\C-cg"
+  (lambda () (interactive) (magit-status)))
+
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/docs/inbox.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("w" "Work Log" entry (file+datetree "~/docs/work.org")
+         "* %?\nEntered on %T\n%i")))
+
+(require 'ox-jira)
+(require 'yaml-mode)
