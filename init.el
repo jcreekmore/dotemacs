@@ -9,7 +9,8 @@
 
 (let* ((package--builtins nil)
        (packages
-        '(ebib                 ; Manage bibtex databases
+        '(company
+          ebib                 ; Manage bibtex databases
           ledger-mode          ; Emacs Major mode for Ledger
           magit                ; control Git from Emacs
           markdown-mode        ; Emacs Major mode for Markdown-formatted files
@@ -18,6 +19,7 @@
           rust-mode            ; Emacs Major mode for Rust
           pdf-tools            ; Emacs support library for PDF files
           projectile           ; Manage and navigate projects in Emacs easily
+          terraform-mode       ; Emacs Major mode for Terraform files
           yaml-mode
           which-key)))         ; Display available keybindings in popup
   (ignore-errors ;; This package is only relevant for Mac OS X.
@@ -75,8 +77,11 @@
 (define-key global-map "\C-cc"
   (lambda () (interactive) (org-capture)))
 
-(define-key global-map "\C-cg"
+(define-key global-map (quote [f12])
   (lambda () (interactive) (magit-status)))
+
+(define-key global-map "\M-o" 'occur)
+
 
 (setq make-backup-files nil)
 (setq auto-save-default nil)
@@ -85,7 +90,16 @@
       '(("t" "Todo" entry (file+headline "~/docs/inbox.org" "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("w" "Work Log" entry (file+datetree "~/docs/work.org")
-         "* %?\nEntered on %T\n%i")))
+         "* %?\n   Entered on %T\n   %i\n")))
 
 (require 'ox-jira)
 (require 'yaml-mode)
+(require 'company)
+(require 'terraform-mode)
+
+(add-hook 'python-mode-hook 'company-mode)
+(add-hook 'rust-mode-hook 'company-mode)
+
+
+(add-hook 'python-mode-hook
+          (lambda () (setq show-trailing-whitespace t)))
