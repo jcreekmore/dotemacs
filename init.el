@@ -10,16 +10,22 @@
 (let* ((package--builtins nil)
        (packages
         '(company
+          counsel-projectile   ;
+          dash-at-point        ; 
           ebib                 ; Manage bibtex databases
+          ivy                  ; Ivy Mode
+          groovy-mode          ; Gimme Jenkinsfile support
           ledger-mode          ; Emacs Major mode for Ledger
           magit                ; control Git from Emacs
           markdown-mode        ; Emacs Major mode for Markdown-formatted files
           org                  ; Outline-based notes management and organizer
-          ox-jira              ; Org Export support for JIRA
+          ripgrep              ; Ripgrep mode
           rust-mode            ; Emacs Major mode for Rust
           pdf-tools            ; Emacs support library for PDF files
           projectile           ; Manage and navigate projects in Emacs easily
+          swiper               ; Fancy iSearch interface
           terraform-mode       ; Emacs Major mode for Terraform files
+          wgrep
           yaml-mode
           which-key)))         ; Display available keybindings in popup
   (ignore-errors ;; This package is only relevant for Mac OS X.
@@ -54,7 +60,6 @@
               auto-fill-function 'do-auto-fill) ; Auto-fill-mode everywhere
 
 (setq auto-revert-interval 1            ; Refresh buffers fast
-      custom-file (make-temp-file "")   ; Discard customization's
       default-input-method "TeX"        ; Use TeX when toggling input method
       echo-keystrokes 0.1               ; Show keystrokes asap
       inhibit-startup-message t         ; No splash screen please
@@ -66,11 +71,6 @@
 ;; Some mac-bindings interfere with Emacs bindings.
 (when (boundp 'mac-pass-command-to-system)
   (setq mac-pass-command-to-system nil))
-
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-
 
 (setq org-agenda-files '("~/docs"))
 
@@ -92,14 +92,57 @@
         ("w" "Work Log" entry (file+datetree "~/docs/work.org")
          "* %?\n   Entered on %T\n   %i\n")))
 
-(require 'ox-jira)
 (require 'yaml-mode)
 (require 'company)
 (require 'terraform-mode)
 
 (add-hook 'python-mode-hook 'company-mode)
+(add-hook 'python-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'rust-mode-hook 'company-mode)
+(add-hook 'rust-mode-hook 'display-fill-column-indicator-mode)
 
 
 (add-hook 'python-mode-hook
           (lambda () (setq show-trailing-whitespace t)))
+
+(global-display-line-numbers-mode)
+(ivy-mode t)
+(server-start)
+(desktop-save-mode t)
+
+(when (string= system-type "darwin")
+  (setq dired-use-ls-dired t
+        insert-directory-program "/usr/local/bin/gls"
+        dired-listing-switches "-aBhl --group-directories-first"))
+
+(counsel-mode t)
+(counsel-projectile-mode)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(wgrep dash-at-point groovy-mode yaml-mode which-key terraform-mode rust-mode ripgrep reveal-in-osx-finder pdf-tools ox-jira markdown-mode magit ledger-mode evil ein ebib counsel-projectile company))
+ '(projectile-completion-system 'ivy)
+ '(projectile-globally-ignored-directories
+   '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "__pycache__" "build" "target" ".venv" ".mypy_cache"))
+ '(projectile-ignored-projects '("~/work/taskerv2"))
+ '(python-shell-completion-native-enable nil)
+ '(python-shell-interpreter "python3.7"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(require 'wgrep)
+
+(global-set-key "\C-cd" 'dash-at-point)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+(global-set-key "\C-s" 'swiper)
+(global-set-key "\C-r" 'swiper-backward)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
