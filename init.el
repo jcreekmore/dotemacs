@@ -14,11 +14,14 @@
           dash-at-point        ; 
           ebib                 ; Manage bibtex databases
           ivy                  ; Ivy Mode
+          ivy-bibtex
           groovy-mode          ; Gimme Jenkinsfile support
           ledger-mode          ; Emacs Major mode for Ledger
           magit                ; control Git from Emacs
           markdown-mode        ; Emacs Major mode for Markdown-formatted files
           org                  ; Outline-based notes management and organizer
+          org-roam             ;
+          org-roam-bibtex
           ripgrep              ; Ripgrep mode
           rust-mode            ; Emacs Major mode for Rust
           pdf-tools            ; Emacs support library for PDF files
@@ -123,14 +126,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(dired-listing-switches "-l")
+ '(dired-use-ls-dired nil)
  '(package-selected-packages
-   '(wgrep dash-at-point groovy-mode yaml-mode which-key terraform-mode rust-mode ripgrep reveal-in-osx-finder pdf-tools ox-jira markdown-mode magit ledger-mode evil ein ebib counsel-projectile company))
+   '(ivy-bibtex org-roam-bibtex org-roam wgrep dash-at-point groovy-mode yaml-mode which-key terraform-mode rust-mode ripgrep reveal-in-osx-finder pdf-tools ox-jira markdown-mode magit ledger-mode evil ein ebib counsel-projectile company))
  '(projectile-completion-system 'ivy)
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "__pycache__" "build" "target" ".venv" ".mypy_cache"))
  '(projectile-ignored-projects '("~/work/taskerv2"))
  '(python-shell-completion-native-enable nil)
- '(python-shell-interpreter "python3.7"))
+ '(python-shell-interpreter "python3.7")
+ '(tramp-terminal-type "dumb"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -140,9 +146,28 @@
 
 (require 'wgrep)
 
-(global-set-key "\C-cd" 'dash-at-point)
 (setq ivy-use-virtual-buffers t)
 (setq enable-recursive-minibuffers t)
 (global-set-key "\C-s" 'swiper)
 (global-set-key "\C-r" 'swiper-backward)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
+
+(if (string-prefix-p "Nebula" (system-name))
+    (setq org-roam-directory "~/Documents/org-roam")
+  (setq org-roam-directory "/Users/jona4307/Library/Mobile Documents/com~apple~CloudDocs/Documents/org-roam"))
+(add-hook 'after-init-hook 'org-roam-mode)
+
+(require 'org-roam-bibtex)
+(add-hook 'after-init-hook 'org-roam-bibtex-mode)
+
+(require 'ox-md)
+(global-set-key (kbd "C-c n r") #'org-roam-buffer-toggle-display)
+(global-set-key (kbd "C-c n i") #'org-roam-insert)
+(global-set-key (kbd "C-c n /") #'org-roam-find-file)
+(global-set-key (kbd "C-c n b") #'org-roam-switch-to-buffer)
+(global-set-key (kbd "C-c n d") #'org-roam-find-directory)
+
+(global-set-key (kbd "C-c d t") #'org-roam-dailies-find-today)
+(global-set-key (kbd "C-c d p") #'org-roam-dailies-find-yesterday)
+(global-set-key (kbd "C-c d n") #'org-roam-dailies-find-tomorrow)
+(global-set-key (kbd "C-c d c") #'org-roam-dailies-capture-today)
