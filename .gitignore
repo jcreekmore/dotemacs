@@ -7,3 +7,7 @@
 .cache/
 transient/
 *.elc
+/.emacs.desktop*
+/ido.last
+/org-roam.db
+/bookmarks
